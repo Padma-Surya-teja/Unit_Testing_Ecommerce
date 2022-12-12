@@ -7,6 +7,7 @@ import (
 
 	database "ecommerce.com/m/database"
 	"ecommerce.com/m/models"
+	"github.com/gorilla/mux"
 )
 
 type JsonResponse struct {
@@ -16,7 +17,7 @@ type JsonResponse struct {
 }
 
 type Server struct {
-	db database.DataBase
+	Db database.DataBase
 }
 
 type PRODUCT interface {
@@ -42,7 +43,8 @@ func (s Server) GetProducts(w http.ResponseWriter, r *http.Request) {
 
 	s.PrintMessage("Getting Products...")
 
-	products, _ := s.db.GetAllProducts()
+	w.WriteHeader(http.StatusOK)
+	products, _ := s.Db.GetAllProducts()
 	s.PrintMessage("Received the Products...")
 	var response = JsonResponse{Type: "success", Data: products}
 
@@ -57,25 +59,27 @@ func (s Server) AddProduct(w http.ResponseWriter, r *http.Request) {
 
 	s.CheckErr(err)
 
+	w.WriteHeader(http.StatusOK)
 	var response = JsonResponse{}
 
 	s.PrintMessage("Inserting Product into Db")
 
-	s.db.CreateProduct(t)
+	s.Db.CreateProduct(t)
 	response = JsonResponse{Type: "success", Message: "The product has been inserted successfully!"}
 
 	json.NewEncoder(w).Encode(response)
 }
 
-// func (s Server) GetProduct(w http.ResponseWriter, r *http.Request) {
-// 	params := mux.Vars(r)
+// Getting a Particular Product by ID
+func (s Server) GetProduct(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
 
-// 	id := params["id"]
+	id := params["id"]
 
-// 	s.PrintMessage("Getting Products...")
+	w.WriteHeader(http.StatusOK)
+	s.PrintMessage("Getting Products...")
 
-// 	var product []models.Product
-// 	s.Db.Model(&models.Product{}).Preload("Rating").Preload("Variant").Where("id=?", id).Find(&product)
-
-// 	json.NewEncoder(w).Encode(product)
-// }
+	product, err := s.Db.GetParticularProduct(id)
+	s.CheckErr(err)
+	json.NewEncoder(w).Encode(product)
+}

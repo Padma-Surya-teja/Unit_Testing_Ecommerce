@@ -19,9 +19,7 @@ func main() {
 	db_name := flag.String("name", "Ecommerce_microservice", "database name")
 	db := models.SetupDb(db_user, db_password, db_name)
 
-	var _ database.DBClient = database.DBClient{Db: db}
-
-	var s handlers.Server = handlers.Server{}
+	var s handlers.Server = handlers.Server{Db: database.DBClient{Db: db}}
 	//Init the mux router
 	router := mux.NewRouter()
 
@@ -29,13 +27,13 @@ func main() {
 	router.HandleFunc("/api/products", s.GetProducts).Methods("GET")
 
 	// //Add a Product
-	// router.HandleFunc("/api/products/create", s.AddProduct).Methods("POST")
+	router.HandleFunc("/api/products/create", s.AddProduct).Methods("POST")
 
-	// //Get a particular Product
-	// router.HandleFunc("/api/products/{id}", database.GetProduct).Methods("GET")
+	//Get a particular Product
+	router.HandleFunc("/api/products/{id}", s.GetProduct).Methods("GET")
 
 	// //Add review to a particular product
-	// router.HandleFunc("/api/products/{id}/reviews/create", database.AddReview).Methods("POST")
+	router.HandleFunc("/api/products/{id}/reviews/create", s.AddReview).Methods("POST")
 
 	// //Get a particular product review
 	// router.HandleFunc("/api/products/{id}/reviews", database.GetProductReviews).Methods("GET")

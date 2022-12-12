@@ -1,43 +1,35 @@
 package handlers
 
-// import (
-// 	"encoding/json"
-// 	"fmt"
-// 	"net/http"
-// 	"strconv"
+import (
+	"encoding/json"
+	"net/http"
+	"strconv"
 
-// 	"ecommerce.com/m/models"
-// 	"github.com/gorilla/mux"
-// )
+	"ecommerce.com/m/models"
+	"github.com/gorilla/mux"
+)
 
-// func (s DataBase) AddReview(w http.ResponseWriter, r *http.Request) {
-// 	params := mux.Vars(r)
+// Adding Review to a Particular Product
+func (s Server) AddReview(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
 
-// 	id := params["id"]
+	id, err := strconv.Atoi(params["id"])
+	s.CheckErr(err)
+	decoder := json.NewDecoder(r.Body)
+	var t models.Rating
+	err = decoder.Decode(&t)
 
-// 	decoder := json.NewDecoder(r.Body)
-// 	var t models.Rating
-// 	err := decoder.Decode(&t)
+	s.CheckErr(err)
 
-// 	s.CheckErr(err)
+	s.PrintMessage("Inserting Review into Db")
 
-// 	var response = JsonResponse{}
+	s.Db.CreateReview(uint(id), t)
 
-// 	fmt.Println(t)
+	response := JsonResponse{Type: "success", Message: "The product review has been inserted successfully!"}
+	s.PrintMessage("Inserted Review into Db")
 
-// 	s.PrintMessage("Inserting Review into Db")
-
-// 	var product models.Product
-// 	s.Db.Model(&models.Product{}).Preload("Rating").Preload("Variant").Where("id=?", id).Find(&product)
-
-// 	product.Rating = append(product.Rating, t)
-// 	s.Db.Save(&product)
-
-// 	response = JsonResponse{Type: "success", Message: "The product review has been inserted successfully!"}
-// 	s.PrintMessage("Inserted Review into Db")
-
-// 	json.NewEncoder(w).Encode(response)
-// }
+	json.NewEncoder(w).Encode(response)
+}
 
 // func (s DataBase) GetProductReviews(w http.ResponseWriter, r *http.Request) {
 // 	params := mux.Vars(r)

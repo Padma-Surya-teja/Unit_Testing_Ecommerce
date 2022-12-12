@@ -48,6 +48,20 @@ func (mr *MockDataBaseMockRecorder) CreateProduct(arg0 interface{}) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateProduct", reflect.TypeOf((*MockDataBase)(nil).CreateProduct), arg0)
 }
 
+// CreateReview mocks base method.
+func (m *MockDataBase) CreateReview(arg0 uint, arg1 models.Rating) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateReview", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateReview indicates an expected call of CreateReview.
+func (mr *MockDataBaseMockRecorder) CreateReview(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateReview", reflect.TypeOf((*MockDataBase)(nil).CreateReview), arg0, arg1)
+}
+
 // GetAllProducts mocks base method.
 func (m *MockDataBase) GetAllProducts() ([]models.Product, error) {
 	m.ctrl.T.Helper()
@@ -61,4 +75,19 @@ func (m *MockDataBase) GetAllProducts() ([]models.Product, error) {
 func (mr *MockDataBaseMockRecorder) GetAllProducts() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllProducts", reflect.TypeOf((*MockDataBase)(nil).GetAllProducts))
+}
+
+// GetParticularProduct mocks base method.
+func (m *MockDataBase) GetParticularProduct(arg0 string) (models.Product, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetParticularProduct", arg0)
+	ret0, _ := ret[0].(models.Product)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetParticularProduct indicates an expected call of GetParticularProduct.
+func (mr *MockDataBaseMockRecorder) GetParticularProduct(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetParticularProduct", reflect.TypeOf((*MockDataBase)(nil).GetParticularProduct), arg0)
 }
